@@ -59,7 +59,10 @@ public class CardPuzzle extends JFrame{
 	JDialog dialogResult;
 	JLabel labelResultText;
 	JLabel labelResultTime;
-	JButton buttonResultOK;
+	JPanel buttonPanel;
+	JButton buttonResultOK;  // 확인버튼
+	JButton buttonResultEnd;  // 종료버튼
+	
 	//int cardPuzzleScore=0;
 	
 	
@@ -76,17 +79,33 @@ public class CardPuzzle extends JFrame{
 		setLayout(new BorderLayout());
 		startCheck=0;
 
-		buttonResultOK = new JButton("확    인");
+		// 결과 파업창 : 확인버튼
+		buttonResultOK = new JButton("확인");
 		buttonResultOK.setFont(new Font("맑은 고딕",Font.BOLD , 25));
+		buttonResultOK.addActionListener(new MyActionListenerOk());  // 이벤트 메소드 호출
 		//buttonResultOK.setPreferredSize(new Dimension(170, 90));  // 레이아웃을 그대로 두고 버튼의 크기 변경
 		//buttonResultOK.addActionListener(new EventHandlerResultOK());
 		
+		// 결과 파업창 : 종료버튼
+		buttonResultEnd = new JButton("종료");
+		buttonResultEnd.setFont(new Font("맑은 고딕",Font.BOLD , 25));
+		buttonResultEnd.addActionListener(new MyActionListenerOk());  // 이벤트 메소드 호출
+		
+		// 결과 파업창 : 버튼의 panel
+		buttonPanel = new JPanel();
+		buttonPanel.add(buttonResultOK);
+		buttonPanel.add(buttonResultEnd);
+		
+		// 결과 파업창 
 		dialogResult = new JDialog(this, "게임 결과");
 		dialogResult.setLayout(new GridLayout(3,1));
-		dialogResult.setBounds(650, 500, 300, 200);  //절대 위치와 크기 고정 (x좌표, y좌표, 가로크기, 세로크기)
+		//dialogResult.setBounds(650, 500, 300, 200);  //절대 위치와 크기 고정 (x좌표, y좌표, 가로크기, 세로크기)
+		dialogResult.setSize(300, 200);
+		dialogResult.setLocationRelativeTo(null);  // dialogResult를 화면에 맞게 중앙정렬
 		dialogResult.add(labelResultText);
 		dialogResult.add(labelResultTime);
-		dialogResult.add(buttonResultOK);
+		dialogResult.add(buttonPanel);
+		
 		
 		add(panel1, BorderLayout.NORTH);
 		add(panel2, BorderLayout.CENTER);
@@ -154,6 +173,21 @@ public class CardPuzzle extends JFrame{
 		
 	}
 	// 패널2
+	
+	class MyActionListenerOk implements ActionListener {  // 게임 결과 창 확인 버튼
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+			if(e.getSource() == buttonResultOK) {
+				dialogResult.dispose();
+				
+			}else if(e.getSource() == buttonResultEnd) {
+				System.exit(0);
+			}
+		}
+		
+	}
 	
 	
 
@@ -443,12 +477,5 @@ public class CardPuzzle extends JFrame{
 			dialogResult.setVisible(true);
 
 	} 
-	
-	
-	public static void main(String[] args) {
-
-		new CardPuzzle();
-		
-	}
 	
 }
