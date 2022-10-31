@@ -2,6 +2,7 @@ package proj01;
 
 import java.awt.*;
 
+
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 import javax.swing.border.LineBorder;
@@ -16,6 +17,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.io.File;
+
+import proj01.RoundedButton;
 
 
 public class CardPuzzle extends JFrame{
@@ -33,7 +36,7 @@ public class CardPuzzle extends JFrame{
 	int sec=0;
 	JLabel labelTimer; 		// 시간초 보여줄 패널1의 라벨
 	Timer timerSec = new Timer();		// 패널1에 보여줄 라벨의 타이머 초기화
-	JButton buttonStart;	  		// 게임 시작 버튼
+	RoundedButton buttonStart;	  		// 게임 시작 버튼
 
 	
 	// 패널 2 게임구현부분
@@ -60,8 +63,8 @@ public class CardPuzzle extends JFrame{
 	JLabel labelResultText;
 	JLabel labelResultTime;
 	JPanel buttonPanel;
-	JButton buttonResultOK;  // 확인버튼
-	JButton buttonResultEnd;  // 종료버튼
+	RoundedButton buttonResultOK;  // 확인버튼
+	RoundedButton buttonResultEnd;  // 종료버튼
 	
 	//int cardPuzzleScore=0;
 	
@@ -80,16 +83,16 @@ public class CardPuzzle extends JFrame{
 		startCheck=0;
 
 		// 결과 파업창 : 확인버튼
-		buttonResultOK = new JButton("확인");
+		buttonResultOK = new RoundedButton("확인");
 		buttonResultOK.setFont(new Font("맑은 고딕",Font.BOLD , 25));
-		buttonResultOK.addActionListener(new MyActionListenerOk());  // 이벤트 메소드 호출
+		buttonResultOK.addActionListener(new MyActionListenerResult());  // 이벤트 메소드 호출
 		//buttonResultOK.setPreferredSize(new Dimension(170, 90));  // 레이아웃을 그대로 두고 버튼의 크기 변경
 		//buttonResultOK.addActionListener(new EventHandlerResultOK());
 		
 		// 결과 파업창 : 종료버튼
-		buttonResultEnd = new JButton("종료");
+		buttonResultEnd = new RoundedButton("종료");
 		buttonResultEnd.setFont(new Font("맑은 고딕",Font.BOLD , 25));
-		buttonResultEnd.addActionListener(new MyActionListenerOk());  // 이벤트 메소드 호출
+		buttonResultEnd.addActionListener(new MyActionListenerResult());  // 이벤트 메소드 호출
 		
 		// 결과 파업창 : 버튼의 panel
 		buttonPanel = new JPanel();
@@ -116,14 +119,14 @@ public class CardPuzzle extends JFrame{
 	}
 	
 	
-	class JPanel1 extends JPanel{		// 버튼, 라벨패널
+	class JPanel1 extends JPanel{		// 시작버튼, 개수 라벨, 시간 라벨
 		
 		public JPanel1(){
 			
 				setBackground(Color.white);
-	            setLayout(new GridLayout(1,3,30,5));   // 패널 레이아웃 설정
+	            setLayout(new GridLayout(1,3,30,5));   //상단 패널 레이아웃 설정  // 1행 3열, 행 간격 : 30, 열 간격 : 5
 	        
-	            buttonStart =new JButton("New Game!!");
+	            buttonStart = new RoundedButton("New Game!!");
 
 	        	labelTimer = new JLabel("  "+sec+" 초");	
 	            labelTimer.setFont(new Font("맑은 고딕",Font.BOLD , 20));  //글자스타일
@@ -144,7 +147,7 @@ public class CardPuzzle extends JFrame{
 	            add(buttonStart);
 	            add(labelTimer);
 
-	            buttonStart.addActionListener(new MyActionListenerNewGame());
+	            buttonStart.addActionListener(new MyActionListenerNewGame());  // 시작버튼 클릭 시 이벤트
 	            
 		}			
 	}
@@ -174,28 +177,28 @@ public class CardPuzzle extends JFrame{
 	}
 	// 패널2
 	
-	class MyActionListenerOk implements ActionListener {  // 게임 결과 창 확인 버튼
+	class MyActionListenerResult implements ActionListener {  // 게임 결과 창 확인 버튼, 종료 버튼
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
-			if(e.getSource() == buttonResultOK) {
-				dialogResult.dispose();
+			if(e.getSource() == buttonResultOK) {  // getSource()메서드는 이벤트를 발생시킨 이벤트 소스 객체를 얻어온다.
+				dialogResult.dispose();  // 결과창 닫기
+				//new CardPuzzle();
 				
 			}else if(e.getSource() == buttonResultEnd) {
-				System.exit(0);
+				System.exit(0);  // 게임창까지 닫기
 			}
 		}
 		
 	}
-	
 	
 
 	class MyActionListenerNewGame implements ActionListener {    //  게임 시작버튼
         @Override
         public void actionPerformed(ActionEvent e) {
         	
-        	setButtonName(); 
+        	setButtonName(); // 버튼에 이름주기
         	startCheck=1; 
         	sec = 0;
         	count = 20;
@@ -209,22 +212,22 @@ public class CardPuzzle extends JFrame{
           	timerSec.cancel();				// 타이머 객체 없애기
     	  	timerSec = new Timer();    // 타이머 객체 초기화
     	  	
-        	timerMix.scheduleAtFixedRate(new TimerTask() { 		// 패 섞는 모션
+        	timerMix.scheduleAtFixedRate(new TimerTask() { 		// 패 섞는 모션  
         		int i=0;
 				public void run() {
-					mixNumber();
+					mixNumber();  // 카드섞기
 					setImage();
 					setButtonResetImage();
 					i=i+1;
 					if(i==20)timerMix.cancel();			// 20번 섞었으면 타이머 종료시키기
 				}
-			}, 0,50);			// 0초후 실행해서 0.005초간격으로 섞기
+			}, 0,50);			// 0초후 실행해서 0.05초간격으로 섞기
  			
         	
-    		timerHide.scheduleAtFixedRate(new TimerTask() {		// 패 4초 보여준 후 뒤집는 모션
+    		timerHide.scheduleAtFixedRate(new TimerTask() {		// 패 2초 보여준 후 뒤집는 모션
     			public void run() {
-    				hideButtonImage();
-    				timerHide.cancel();
+    				hideButtonImage();  // 버튼 그림 뒷면 보이기
+    				timerHide.cancel();  // 그림 뒷면이 보이면 타이머 종료시키기
     			}
     		}, 2000, 1); 		// 2초후 실행
         	
@@ -248,10 +251,10 @@ public class CardPuzzle extends JFrame{
 		}
 		public void mouseExited(java.awt.event.MouseEvent e) {	
 		}
-		public void mousePressed(java.awt.event.MouseEvent e) {		
+		public void mousePressed(java.awt.event.MouseEvent e) {		// 마우스 버튼이 눌리면
 			labelConfirmedCheck = ((JLabel)e.getSource());
         	if(labelConfirmedCheck.getName()=="checked"){    // 눌린 버튼이 checked이면 성공한버튼 눌린거면 실행안하기
-            	selectedTwoCardCheck =0;    // 성공한 패를 눌렀으므로 카운트 다시 0으로
+            	selectedTwoCardCheck = 0;    // 성공한 패를 눌렀으므로 카운트 다시 0으로
             	
         	}else if(startCheck==1 && (selectedTwoCardCheck==0 || selectedTwoCardCheck==1)){  
         		// 카드가 뒤집어 졌을때만 실행하기위해
@@ -263,18 +266,18 @@ public class CardPuzzle extends JFrame{
         				
       	
         				labelSelectedFirst=((JLabel)e.getSource());  // 첫번째 눌린 버튼객체 가져오기
-        				selectedImageNumber =Integer.parseInt(labelSelectedFirst.getName()) -1;  // 이름이 string 이므로 int로 변환
-        				selectedImage = new ImageIcon(path +"pic/image/"+cardrandom[selectedImageNumber]+".png"); 
+        				selectedImageNumber =Integer.parseInt(labelSelectedFirst.getName()) -1;  // 이름이 string 이므로 int로 변환 -> 배열에 들어가 있기에 -1을 해줌(인덱스는 0번부터 시작)
+        				selectedImage = new ImageIcon(path +"pic/image/"+cardrandom[selectedImageNumber]+".png");  
         				labelSelectedFirst.setIcon(selectedImage);     // 버튼 눌려진 이미지 보여주기
         		 
-        				firstCardNumber = cardrandom[selectedImageNumber];	// 카드 번호가 10이하면 그냥 저장
+        				firstCardNumber = cardrandom[selectedImageNumber];	// 카드 번호가 10이하이면 그냥 저장
         				if(cardrandom[selectedImageNumber]>10)			// 카드 번호가 10보다 크면 -10
         					firstCardNumber = cardrandom[selectedImageNumber]-10; 
         			}// 첫번째 눌린 카드 번호
 
         			// 두번째 눌린 카드 번호
     				if(labelConfirmedCheck.getName()==labelSelectedFirst.getName()){		// 두번째 클릭이 처음클릭한 카드를 또 선택했으면 카운트0
-    					selectedTwoCardCheck =1;
+    					selectedTwoCardCheck = 1;
     				}else if(selectedTwoCardCheck==2	){			
         				labelSelectedSecond=((JLabel)e.getSource());  // 첫번째 눌린 버튼객체 가져오기
         				selectedImageNumber =Integer.parseInt(labelSelectedSecond.getName()) -1;  // 이름이 string 이므로 int로 변환
@@ -287,8 +290,8 @@ public class CardPuzzle extends JFrame{
         				
         				if(firstCardNumber==secondCardNumber ){   	// 첫번째 두번째 선택된 카드 비교
         					selectedTwoCardCheck =0;		// 카드 2선택되면 다시  초기화
-        					labelSelectedFirst.setName("checked"); 				// 성공이므로 버튼 이름 50으로 해서 선택못하게 하기
-        					labelSelectedSecond.setName("checked"); // 성공이므로 버튼 이름 50으로 해서 선택못하게 하기
+        					labelSelectedFirst.setName("checked"); 				// 성공이므로 버튼 이름 checked으로 해서 선택못하게 하기
+        					labelSelectedSecond.setName("checked"); // 성공이므로 버튼 이름 checked으로 해서 선택못하게 하기
         					count = count - 2;
         					labelCount.setText("남은 개수 :  "+count + "개 ");	
         			 
@@ -314,7 +317,7 @@ public class CardPuzzle extends JFrame{
         					
         				}else{
         					timerCardCheck = new Timer();
-        					timerCardCheck.scheduleAtFixedRate(new TimerTask() { 	//첫번째 두번째 카드비교후 틀리면 몇초보여주기간 
+        					timerCardCheck.scheduleAtFixedRate(new TimerTask() { 	//첫번째 두번째 카드비교후 틀리면 몇초보여주기
         	
         						public void run() {
         							selectedTwoCardCheck =0;		// 카드 2선택되면 다시  초기화 , 카드가 뒷면보일때까지 다른것 선택못하게하기
@@ -322,7 +325,7 @@ public class CardPuzzle extends JFrame{
         							labelSelectedSecond.setIcon(imageBack); 			// 틀렸으므로 두번째 카드 다시 뒤집기
         							timerCardCheck.cancel();				// 뒤집고 타이머 종료
         						}
-        					}, 300,1);				// 0.4초후 카드 뒷면 보이게 하기.
+        					}, 300,1);				// 0.3초후 카드 뒷면 보이게 하기.
         				} 
         			}// 두번째 눌린 카드 번호		
         	}
@@ -333,35 +336,34 @@ public class CardPuzzle extends JFrame{
 	}
 	// 두개 카드 확인 및 결과 표시
 
-	/*class EventHandlerResultOK implements ActionListener{    // 게임결과확인버튼으로 DB에 점수 저장하기  // 전부 주석처리해도된다.
+	/*class EventHandlerResultOK implements ActionListener{    // 게임결과확인버튼으로 DB에 시간 저장하기  // 전부 주석처리해도된다.
 		
 		public void actionPerformed(ActionEvent e){	
 			
-			dialogResult.dispose();   // 확인버튼 있는 다이얼로그창 없애기
+			//dialogResult.dispose();   // 확인버튼 있는 다이얼로그창 없애기
 
-			int ReceivedDBScore=0;
+			int ReceivedDBTime=0;
 			
 			String driver = "oracle.jdbc.driver.OracleDriver";
-	        String url = "jdbc:oracle:thin:@111.222.253.124:1521:XE";   // 자신의 오라클 아이피로해야한다.
+			String url = "jdbc:oracle:thin:@localhost:1521:xe";   // 자신의 오라클 아이피로해야한다.
+			String userid = "scott";
+			String passwd = "tiger";
 
 	        Connection con = null;
 	        PreparedStatement pstmt = null;
 	        ResultSet rs = null;   // 리턴받아 사용할 객체 생성
 	     
-   	        String querySelect = "select id, jjackscore from USER_INFO where id=?"; 	 
+   	        String querySelect = "select nickname, time from USER_INFO where nickname=?"; 	 
 										// SUTDASCORE 검색   // 자신의 오라클DB에 맞게 설정해야한다.
 	        
 	        try{													// select
 	            Class.forName(driver);
-	            con = DriverManager.getConnection(url, "aaa", "aaa");
+	            con = DriverManager.getConnection(url, userid, passwd);
 	            pstmt = con.prepareStatement(querySelect);
 	           
-	            pstmt.setString(1, userId); 
-	            pstmt.executeUpdate();		// 쿼리문 실행
-	            
 	            rs = pstmt.executeQuery(); // 리턴받아온 쿼리 내용을 객체생성
 	            while(rs.next()){
-	                ReceivedDBScore = rs.getInt("jjackscore");
+	                ReceivedDBTime = rs.getInt("sec");
 	            }
 	            
 	        }catch(Exception e1){
@@ -373,30 +375,8 @@ public class CardPuzzle extends JFrame{
 	                con.close();   // 객체 생성한 반대 순으로 사용한 객체는 닫아준다.
 	            } catch (Exception e2) {}
 	        }
+  
 
-	        
-	        String queryInsert = "UPDATE user_info SET jjackscore=? where id=?";
-	        try{										// insert
-	        	//  Class.forName(driver);  // 드라이버 로딩
-	            con = DriverManager.getConnection(url, "aaa", "aaa"); // DB 연결   // 자신의 오라클DB에 맞게 설정해야한다.
-	            pstmt = con.prepareStatement(queryInsert);   
-	            
-	            // 물음표가 4개 이므로 4개 각각 입력해줘야한다.
-	            ReceivedDBScore = ReceivedDBScore +cardPuzzleScore   ;
-	            pstmt.setInt(1, ReceivedDBScore); 				 // pstmt객체에 각각 셋팅
-	            pstmt.setString(2, userId); 
-	            pstmt.executeUpdate();
-	            
-	            //pstmt.executeUpdate(); create insert update delete 
-	            //pstmt.executeQuery(); select 
-	        }catch(Exception e2){
-	            System.out.println(e2.getMessage());
-	        }finally{
-	            try {
-	                pstmt.close();
-	                   con.close();               // 역순으로 닫아준다.
-	            } catch (Exception e2) {}
-	        }
 		}
 	} */
 	//  EventHandlerResultOK
