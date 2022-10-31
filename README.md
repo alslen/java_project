@@ -37,7 +37,10 @@
 
 # 이슈
 1. 클래스 별로 파일을 분리하고 싶었지만 해결하지 못했음.
-2. 
+2. 결과 확인 창에 종료버튼을 추가하니 Congratulations메시지와 몇 초 걸렸는지 알려주는 문구가 한줄에 나오는 문제점이 생겼음. <br>
+![2](https://user-images.githubusercontent.com/114123460/198992042-6c12f701-aedd-44e7-b3dd-83e1fc110e77.jpg) <br>
+-> 확인버튼/종료버튼을 하나의 Panel에 추가하고 Panel(버튼들이 추가된)과 문구들을 GridLayout으로 묶어줬음.<br>
+![화면 캡처 2022-10-31 200250](https://user-images.githubusercontent.com/114123460/198993915-06c32116-f9c6-4f0a-a507-deb593bb56a2.jpg)
 
 # 추가할 기능
 1. 로그인/ 회원가입/ 랭킹을 보여주는 창 구현
